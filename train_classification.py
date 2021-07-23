@@ -14,41 +14,41 @@ import random
 import pickle
 from collections import deque
 
-from inception import inception_model as inception
-from inception.slim import slim
+import inception_model as inception
+import tf_slim as slim
 
-FLAGS = tf.app.flags.FLAGS
+FLAGS = tf.compat.v1.flags.FLAGS
 
-tf.app.flags.DEFINE_string('ckpt_save_dir', 'ckpt/inception_classification',
+tf.compat.v1.flags.DEFINE_string('ckpt_save_dir', 'ckpt/inception_classification',
                            """Directory for saving model checkpoint. """)
 
-tf.app.flags.DEFINE_string('ckpt_restore_dir', 'ckpt/inception_classification',
+tf.compat.v1.flags.DEFINE_string('ckpt_restore_dir', 'ckpt/inception_classification',
                            """Directory for restoring old model checkpoint. """)
 
-tf.app.flags.DEFINE_string('pretrained_model_ckpt_path', 'ckpt/inception-v3/model.ckpt-157585',
+tf.compat.v1.flags.DEFINE_string('pretrained_model_ckpt_path', 'ckpt/inception-v3/model.ckpt-157585',
                            """If specified, restore this pretrained model """
                            """before beginning any training.""")
 
-tf.app.flags.DEFINE_string('train_set_dir', 'SPI_train',
+tf.compat.v1.flags.DEFINE_string('train_set_dir', 'SPI_train',
                            """Directory of training set""")
 
-tf.app.flags.DEFINE_integer('max_steps', 200000,
+tf.compat.v1.flags.DEFINE_integer('max_steps', 200000,
                             """Number of batches/steps to run.""")
 
-tf.app.flags.DEFINE_integer('num_gpus', 1,
+tf.compat.v1.flags.DEFINE_integer('num_gpus', 1,
                             """How many GPUs to use.""")
 
-tf.app.flags.DEFINE_boolean('fine_tune', True,
+tf.compat.v1.flags.DEFINE_boolean('fine_tune', True,
                             """If true, start from well-trained model on SPI dataset, else start from
                             pretrained model on ImageNet""")
 
-tf.app.flags.DEFINE_float('initial_learning_rate', 0.001,
+tf.compat.v1.flags.DEFINE_float('initial_learning_rate', 0.001,
                           """Initial learning rate.""")
 
-tf.app.flags.DEFINE_float('num_epochs_per_decay', 5.0,
+tf.compat.v1.flags.DEFINE_float('num_epochs_per_decay', 5.0,
                           """Epochs after which learning rate decays.""")
 
-tf.app.flags.DEFINE_float('learning_rate_decay_factor', 0.5,
+tf.compat.v1.flags.DEFINE_float('learning_rate_decay_factor', 0.5,
                           """Learning rate decay factor.""")
 
 # basic parameters

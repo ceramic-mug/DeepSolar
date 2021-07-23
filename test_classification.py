@@ -14,19 +14,19 @@ import skimage.io
 import skimage.transform
 import pickle
 from collections import deque
+import tf_slim as slim
 
-from inception import inception_model as inception
-from inception.slim import slim
+FLAGS = tf.compat.v1.flags.FLAGS
 
-FLAGS = tf.app.flags.FLAGS
-
-tf.app.flags.DEFINE_string('ckpt_dir', 'ckpt/inception_classification',
-                           """Directory for restoring trained model checkpoints.""")
+tf.compat.v1.flags.DEFINE_string('ckpt_dir', 'ckpt/inception_classification',
+                        """Directory for restoring trained model checkpoints.""")
 
 BATCH_SIZE = 100
 IMAGE_SIZE = 299
 NUM_CLASSES = 2
 THRESHOLD = 0.5 # softmax score threshold of classifying a sample to be positive.
+
+inception = tf.keras.applications.inception_v3.InceptionV3()
 
 def load_image(path):
     img = skimage.io.imread(path)
@@ -55,15 +55,17 @@ def test():
 
     # build the tensorflow graph.
     with tf.Graph().as_default() as g:
-        img_placeholder = tf.placeholder(tf.float32, shape=[BATCH_SIZE, IMAGE_SIZE, IMAGE_SIZE, 3])
+        # shape = 100 many 299x299 images with 3 bands 
+        img_placeholder = tf.compat.v1.placeholder(
+            tf.float32, shape=[BATCH_SIZE, IMAGE_SIZE, IMAGE_SIZE, 3])
 
-        logits, _ = inception.inference(img_placeholder, NUM_CLASSES)
+        logits, _ = inception(img_placeholder, NUM_CLASSES)
 
         saver = tf.train.Saver(tf.all_variables())
 
         ckpt = tf.train.get_checkpoint_state(FLAGS.checkpoint_dir)
 
-        sess = tf.Session(config=tf.ConfigProto(
+        sess = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(
             log_device_placement=True))
 
         with sess:
@@ -80,14 +82,14 @@ def test():
             stats['d'] = [0, 0, 0]  # [TP, FP, FN] for downtown/commercial.
 
             # initialize the result
-            for ind in xrange(1, 66):
+            for ind in range(1, 66):
                 result_list.append([ind, 0, 0, 0, 0]) #[region_index, TP, TN, FP, FN]
 
-            for step in xrange(1, 936):
+            for step in range(1, 936):
                 start_time = time.time()
                 # load data
                 minibatch = []
-                for count in xrange(0, BATCH_SIZE):
+                for count in range(0, BATCH_SIZE):
                     element = eval_set_queue.pop()
                     minibatch.append(element)
 
@@ -104,7 +106,7 @@ def test():
 
                 pos_score = np.exp(score[:, 1])/(np.exp(score[:, 1])+np.exp(score[:, 0]))
 
-                for i in xrange(BATCH_SIZE):
+                for i in range(BATCH_SIZE):
                     if label_list[i][0] == 1 and pos_score[i] >= THRESHOLD: #TP
                         result_list[index_list[i]-1][1] += 1
                         stats[type_list[i]][0] += 1

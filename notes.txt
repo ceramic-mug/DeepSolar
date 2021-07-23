@@ -1,0 +1,19 @@
+# Jul 20
+
+As of Jul 20, curled and tarred all necessary files. Got stuck pip installing requirements.txt. Tensorflow 1.12.0 can't be found by Python 2.7 pip. Leaving it here to focus on treedar documentation.
+
+github repo with instructions: https://github.com/wangzhecheng/DeepSolar
+
+# Jul 22
+
+Downloaded first image from https://nrcs.app.box.com/v/naip/folder/100430597988?page=1
+Image loaded successfully in QGIS
+
+Downloaded census tract data from https://catalog.data.gov/dataset/tiger-line-shapefile-2018-state-minnesota-current-census-tract-state-based
+Layer loaded into QGIS
+
+QGIS WORKING: solar_qgis
+
+# July 23
+
+Refactoring DeepSolar to Python3 because Tensorflow not avialbale for Python2

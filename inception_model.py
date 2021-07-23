@@ -29,9 +29,9 @@ import sys
 
 import tensorflow as tf
 
-from inception.slim import slim
+import tf_slim as slim
 
-FLAGS = tf.app.flags.FLAGS
+FLAGS = tf.compat.v1.flags.FLAGS
 
 # imblanced rate = alpha + 1 (loss penalty on minority class)
 ALPHA = 9
